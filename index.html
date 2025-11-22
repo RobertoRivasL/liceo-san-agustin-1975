@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Galería fotográfica de la Promoción 1975 del Liceo San Agustín. Celebrando 50 años de recuerdos.">
+    <meta name="author" content="Comisión 50 Años Liceo San Agustín">
+
+    <meta property="og:title" content="Galería Liceo San Agustín - Promoción 1975">
+    <meta property="og:description" content="50 años de historia en imágenes. Revive los momentos de la promoción 1975.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="imagenes/01.jpeg">
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self';">
+
+    <title>Galería Liceo San Agustín - Promoción 1975</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      "name": "Galería Promoción 1975",
+      "description": "Fotografías conmemorativas de los 50 años del Liceo San Agustín.",
+      "author": { "@type": "Organization", "name": "Liceo San Agustín" }
+    }
+    </script>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo-container">
+            <img src="imagenes/30.jpeg" alt="Insignia Liceo San Agustín - Generación 1975" class="header-logo">
+        </div>
+
+        <h1>Liceo San Agustín</h1>
+        <p>Promoción 1975 - 50 Años de Historia</p>
+    </header>
+
+    <div class="nav-container">
+        <nav class="nav-tabs" role="tablist" aria-label="Vistas de la galería">
+            <button class="tab-button active" role="tab" aria-selected="true" aria-controls="gallery-view" id="tab-gallery">Galería</button>
+            <button class="tab-button" role="tab" aria-selected="false" aria-controls="carousel-view" id="tab-carousel">Carrusel</button>
+            <button class="tab-button" role="tab" aria-selected="false" aria-controls="list-view" id="tab-list">Lista</button>
+            <button class="tab-button" role="tab" aria-selected="false" aria-controls="contact-view" id="tab-contact">Contacto</button>
+        </nav>
+    </div>
+
+    <main class="main-content">
+        <section id="gallery-view" class="view-section active" role="tabpanel" aria-labelledby="tab-gallery"></section>
+        <section id="carousel-view" class="view-section" role="tabpanel" aria-labelledby="tab-carousel"></section>
+        <section id="list-view" class="view-section" role="tabpanel" aria-labelledby="tab-list"></section>
+     <section id="contact-view" class="view-section" role="tabpanel" aria-labelledby="tab-contact">
+            <div class="contact-container">
+                <div class="contact-card">
+                    <h2>📸 Envíanos tus fotos</h2>
+                    <p>¿Tienes recuerdos que no están en la galería? ¡Queremos verlos! Ayúdanos a completar nuestra historia.</p>
+
+                    <div class="contact-methods">
+                        <a href="mailto:roberto.rivas.l@mail.pucv.cl?subject=Fotos Promoción 1975 - Liceo San Agustín" class="btn-contact email">
+                            ✉️ Enviar a Roberto por Correo
+                        </a>
+
+                        <a href="https://wa.me/56950566771?text=Hola%20Roberto,%20tengo%20algunas%20fotos%20para%20la%20galería%20del%20Liceo." target="_blank" class="btn-contact whatsapp">
+                            📱 Enviar a Roberto por WhatsApp
+                        </a>
+                    </div>
+                    <p class="note"><small>* Al enviarlas, nos autorizas a publicarlas en esta galería.</small></p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog">
+        <button class="lightbox-close" aria-label="Cerrar zoom">×</button>
+        <img src="" alt="" class="lightbox-img">
+    </div>
+
+    <footer class="footer">
+        <p><strong>Liceo San Agustín - Promoción 1975</strong></p>
+        <p>Desarrollado con ❤️ para los ex-alumnos.</p>
+        <p><small>&copy; 2025 Todos los derechos reservados.</small></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
