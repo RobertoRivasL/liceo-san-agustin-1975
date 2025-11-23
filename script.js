@@ -2,22 +2,40 @@
  * LÓGICA GALERÍA LICEO SAN AGUSTÍN
  * Promoción 1975 - 50 Años
  */
+/**
+ * LÓGICA GALERÍA LICEO SAN AGUSTÍN - ACTUALIZADO 22/11/2025
+ */
 
-// === CAPA DE DATOS ===
+// === CAPA DE DATOS FOTOS ===
 class ImageRepository {
-    // ACTUALIZADO: Count 29 (excluyendo la foto 30 que ahora es logo)
-    constructor(count = 29) {
-        this.images = Array.from({ length: count }, (_, i) => {
-            const id = i + 1;
-            return {
-                id: id,
-                src: `imagenes/${String(id).padStart(2, '0')}.jpeg`,
-                alt: `Recuerdo ${id} - Promoción 1975`,
-                title: `Fotografía ${id}`
-            };
-        });
+    // Ahora leemos hasta la imagen 45
+    constructor(maxId = 45) {
+        this.images = [];
+        for (let i = 1; i <= maxId; i++) {
+            // IMPORTANTE: Saltamos la imagen 30 porque es el LOGO del colegio
+            if (i === 30) continue;
+
+            this.images.push({
+                id: i,
+                src: `imagenes/${String(i).padStart(2, '0')}.jpeg`,
+                alt: `Recuerdo ${i} - Promoción 1975`,
+                title: `Fotografía ${i}`
+            });
+        }
     }
     getAll() { return this.images; }
+}
+
+// === CAPA DE DATOS VIDEOS (NUEVO) ===
+class VideoRepository {
+    constructor() {
+        this.videos = [
+            { id: 'v00', src: 'imagenes/v00.mp4', title: 'Celebración 50 Años - Parte 1' },
+            { id: 'v01', src: 'imagenes/v01.mp4', title: 'Celebración 50 Años - Parte 2' },
+            { id: 'v02', src: 'imagenes/v02.mp4', title: 'Celebración 50 Años - Parte 3' }
+        ];
+    }
+    getAll() { return this.videos; }
 }
 
 // === CLASE BASE DE VISTA ===
@@ -25,13 +43,12 @@ class ViewRenderer {
     constructor(containerId, data) {
         this.container = document.getElementById(containerId);
         this.data = data;
-        // Validación silenciosa para evitar errores si falta un contenedor
         if (!this.container) console.warn(`Contenedor ${containerId} no encontrado`);
     }
-    render() {} // Método a sobrescribir
+    render() {}
 }
 
-// === RENDERIZADOR DE GRID (Galería Principal) ===
+// === RENDERIZADOR DE FOTOS (GRID) ===
 class GridRenderer extends ViewRenderer {
     render(onImageClick) {
         if (!this.container) return;
@@ -53,6 +70,33 @@ class GridRenderer extends ViewRenderer {
     }
 }
 
+// === RENDERIZADOR DE VIDEOS (NUEVO) ===
+class VideoRenderer extends ViewRenderer {
+    render() {
+        if (!this.container) return;
+        this.container.innerHTML = '<div class="video-grid"></div>';
+        const grid = this.container.querySelector('.video-grid');
+
+        this.data.forEach(vid => {
+            const card = document.createElement('div');
+            card.className = 'video-card';
+            // Usamos controles nativos y preload metadata para ahorrar datos
+            card.innerHTML = `
+                <div class="video-wrapper">
+                    <video controls preload="metadata">
+                        <source src="${vid.src}" type="video/mp4">
+                        Tu navegador no soporta videos.
+                    </video>
+                </div>
+                <div class="video-info">
+                    <h3>${vid.title}</h3>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+}
+
 // === RENDERIZADOR DE LISTA ===
 class ListRenderer extends ViewRenderer {
     render(onImageClick) {
@@ -67,7 +111,7 @@ class ListRenderer extends ViewRenderer {
                 <img src="${img.src}" alt="${img.alt}" loading="lazy">
                 <div class="list-content">
                     <h3>${img.title}</h3>
-                    <p>Click para ampliar la imagen</p>
+                    <p>Junta 50 Años - Click para ver</p>
                 </div>
             `;
             item.addEventListener('click', () => onImageClick(img));
@@ -76,7 +120,7 @@ class ListRenderer extends ViewRenderer {
     }
 }
 
-// === RENDERIZADOR DE CARRUSEL (CORREGIDO) ===
+// === RENDERIZADOR DE CARRUSEL ===
 class CarouselRenderer extends ViewRenderer {
     constructor(containerId, data) {
         super(containerId, data);
@@ -86,7 +130,6 @@ class CarouselRenderer extends ViewRenderer {
     render() {
         if (!this.container) return;
 
-        // 1. Estructura HTML
         this.container.innerHTML = `
             <div class="carousel-wrapper">
                 <div class="carousel-stage" id="carouselStage"></div>
@@ -97,18 +140,14 @@ class CarouselRenderer extends ViewRenderer {
 
         const stage = this.container.querySelector('#carouselStage');
 
-        // 2. Insertar Imágenes
         this.data.forEach((img, index) => {
             const slide = document.createElement('div');
-            // La primera imagen tiene clase 'active'
             slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
-            // Carga inmediata para la primera, lazy para el resto
             const loading = index === 0 ? 'eager' : 'lazy';
             slide.innerHTML = `<img src="${img.src}" alt="${img.alt}" loading="${loading}">`;
             stage.appendChild(slide);
         });
 
-        // 3. Asignar Eventos (Con bind para asegurar el contexto 'this')
         const btnPrev = this.container.querySelector('.prev');
         const btnNext = this.container.querySelector('.next');
 
@@ -126,19 +165,13 @@ class CarouselRenderer extends ViewRenderer {
     move(direction) {
         const slides = this.container.querySelectorAll('.carousel-slide');
         if (!slides.length) return;
-
-        // Quitar clase active actual
         slides[this.currentIndex].classList.remove('active');
-
-        // Calcular nuevo índice (circular)
         this.currentIndex = (this.currentIndex + direction + this.data.length) % this.data.length;
-
-        // Poner clase active nueva
         slides[this.currentIndex].classList.add('active');
     }
 }
 
-// === LIGHTBOX (Zoom de fotos) ===
+// === LIGHTBOX (Zoom) ===
 class Lightbox {
     constructor() {
         this.el = document.getElementById('lightbox');
@@ -146,22 +179,19 @@ class Lightbox {
         this.img = this.el.querySelector('img');
         this.closeBtn = this.el.querySelector('.lightbox-close');
 
-        // Eventos
         this.closeBtn.onclick = () => this.close();
         this.el.onclick = (e) => { if(e.target === this.el) this.close(); };
         document.addEventListener('keydown', (e) => { if(e.key === 'Escape') this.close(); });
     }
-
     open(imageData) {
         this.img.src = imageData.src;
         this.img.alt = imageData.alt;
         this.el.classList.add('open');
-        document.body.style.overflow = 'hidden'; // Evitar scroll fondo
+        document.body.style.overflow = 'hidden';
     }
-
     close() {
         this.el.classList.remove('open');
-        document.body.style.overflow = ''; // Restaurar scroll
+        document.body.style.overflow = '';
         setTimeout(() => { this.img.src = ''; }, 300);
     }
 }
@@ -169,21 +199,25 @@ class Lightbox {
 // === APP PRINCIPAL ===
 class App {
     constructor() {
-        this.repo = new ImageRepository();
+        this.imgRepo = new ImageRepository(45); // Indicamos que hay 45 fotos
+        this.vidRepo = new VideoRepository();   // Inicializamos repo de videos
         this.lightbox = new Lightbox();
         this.init();
     }
 
     init() {
-        const data = this.repo.getAll();
+        const images = this.imgRepo.getAll();
+        const videos = this.vidRepo.getAll();
         const openLightbox = (img) => this.lightbox.open(img);
 
         // Inicializar vistas
-        const grid = new GridRenderer('gallery-view', data);
-        const list = new ListRenderer('list-view', data);
-        const carousel = new CarouselRenderer('carousel-view', data);
+        const grid = new GridRenderer('gallery-view', images);
+        const videoGrid = new VideoRenderer('video-view', videos); // Nueva vista
+        const list = new ListRenderer('list-view', images);
+        const carousel = new CarouselRenderer('carousel-view', images);
 
         grid.render(openLightbox);
+        videoGrid.render(); // Renderizar videos
         list.render(openLightbox);
         carousel.render();
 
@@ -195,11 +229,9 @@ class App {
         const sections = document.querySelectorAll('.view-section');
 
         buttons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                // Si es botón de contacto, no buscamos renderer, solo mostramos la sección
+            btn.addEventListener('click', () => {
                 const targetId = btn.getAttribute('aria-controls');
 
-                // Actualizar botones
                 buttons.forEach(b => {
                     b.classList.remove('active');
                     b.setAttribute('aria-selected', 'false');
@@ -207,7 +239,6 @@ class App {
                 btn.classList.add('active');
                 btn.setAttribute('aria-selected', 'true');
 
-                // Actualizar secciones
                 sections.forEach(s => s.classList.remove('active'));
                 const targetSection = document.getElementById(targetId);
                 if(targetSection) targetSection.classList.add('active');
