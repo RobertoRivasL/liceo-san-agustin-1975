@@ -1,0 +1,35 @@
+# --- Carpetas de IDEs (WebStorm / IntelliJ) ---
+# IMPORTANTE: Esto evita subir tus configuraciones locales
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# --- Otros Editores (VS Code / Mac) ---
+.vscode/
+.DS_Store
+
+# --- Archivos de Sistema (Windows) ---
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- Archivos Comprimidos y Pesados ---
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+*.iso
+
+# --- Archivos de Diseño (Editables) ---
+*.psd
+*.ai
+*.indd
+
+# --- Imágenes que no quieres subir ---
+# (Si decides subir el logo PNG, borra esta línea)
+*.png
+
+# --- Logs y Errores ---
+*.log

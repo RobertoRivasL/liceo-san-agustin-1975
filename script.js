@@ -9,7 +9,7 @@
 // === CAPA DE DATOS FOTOS ===
 class ImageRepository {
     // Ahora leemos hasta la imagen 45
-    constructor(maxId = 49) {
+    constructor(maxId = 73) {
         this.images = [];
         for (let i = 1; i <= maxId; i++) {
             // IMPORTANTE: Saltamos la imagen 30 porque es el LOGO del colegio
@@ -32,7 +32,8 @@ class VideoRepository {
         this.videos = [
             { id: 'v00', src: 'imagenes/v00.mp4', title: 'Celebración 50 Años - Parte 1' },
             { id: 'v01', src: 'imagenes/v01.mp4', title: 'Celebración 50 Años - Parte 2' },
-            { id: 'v02', src: 'imagenes/v02.mp4', title: 'Celebración 50 Años - Parte 3' }
+            { id: 'v02', src: 'imagenes/v02.mp4', title: 'Celebración 50 Años - Parte 3' },
+            { id: 'v03', src: 'imagenes/v03.mp4', title: 'Celebración 50 Años - Parte 4' }
         ];
     }
     getAll() { return this.videos; }
@@ -199,7 +200,7 @@ class Lightbox {
 // === APP PRINCIPAL ===
 class App {
     constructor() {
-        this.imgRepo = new ImageRepository(49); // Indicamos que hay 45 fotos
+        this.imgRepo = new ImageRepository(73); // Indicamos que hay 45 fotos
         this.vidRepo = new VideoRepository();   // Inicializamos repo de videos
         this.lightbox = new Lightbox();
         this.init();
