@@ -9,7 +9,7 @@
 // === CAPA DE DATOS FOTOS ===
 class ImageRepository {
     // Ahora leemos hasta la imagen 45
-    constructor(maxId = 73) {
+    constructor(maxId = 82) {
         this.images = [];
         for (let i = 1; i <= maxId; i++) {
             // IMPORTANTE: Saltamos la imagen 30 porque es el LOGO del colegio
@@ -200,7 +200,7 @@ class Lightbox {
 // === APP PRINCIPAL ===
 class App {
     constructor() {
-        this.imgRepo = new ImageRepository(73); // Indicamos que hay 45 fotos
+        this.imgRepo = new ImageRepository(82); // Indicamos que hay 45 fotos
         this.vidRepo = new VideoRepository();   // Inicializamos repo de videos
         this.lightbox = new Lightbox();
         this.init();
